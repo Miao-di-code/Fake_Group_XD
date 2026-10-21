@@ -1,0 +1,5 @@
+channels:
+  - conda-forge
+dependencies:
+  - openjdk=17.0.18
+  - maven=3.9.16
