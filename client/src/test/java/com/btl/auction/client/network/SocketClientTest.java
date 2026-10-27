@@ -55,12 +55,12 @@ class SocketClientTest {
     void matchesOutOfOrderResponsesAndRejectsOlderAuctionEvents() throws Exception {
         try (ServerSocket listener = new ServerSocket(0, 1, InetAddress.getByName("127.0.0.1"));
              SocketClient client = new SocketClient()) {
-            CountDownLatch newerEvent = new CountDownLatch(1);
+            CountDownLatch updatedEvents = new CountDownLatch(2);
             CountDownLatch disconnected = new CountDownLatch(1);
             AtomicInteger events = new AtomicInteger();
             client.addEventListener(event -> {
                 events.incrementAndGet();
-                newerEvent.countDown();
+                updatedEvents.countDown();
             });
             client.addDisconnectListener(error -> disconnected.countDown());
             CompletableFuture<?> server = CompletableFuture.runAsync(() -> {
@@ -94,7 +94,7 @@ class SocketClientTest {
                     null, new JsonObject());
             assertEquals("second", second.get(5, TimeUnit.SECONDS).payload().get("marker").getAsString());
             assertEquals("first", first.get(5, TimeUnit.SECONDS).payload().get("marker").getAsString());
-            assertTrue(newerEvent.await(5, TimeUnit.SECONDS));
+            assertTrue(updatedEvents.await(5, TimeUnit.SECONDS));
             assertEquals(2, events.get());
             assertEquals(130, client.latestAuction(1).currentPriceVnd());
             assertEquals(1100, client.latestAuction(1).endAtEpochMs());
