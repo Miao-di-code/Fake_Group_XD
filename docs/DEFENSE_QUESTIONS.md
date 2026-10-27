@@ -9,8 +9,8 @@
 5. **Tại sao dùng DTO?** DTO truyền snapshot qua JSON, không phơi DAO hay password hash.
 6. **Singleton nào?** `AuctionManager.getInstance()` quản lý một tập khóa theo auction trong tiến trình.
 7. **Singleton có giữ giá thắng không?** Không; SQLite và `AuctionService` giữ trạng thái chính.
-8. **Factory Method nào?** `ItemFactory.create` chọn `Electronics`, `Art`, `Vehicle` theo `ItemCategory`.
-9. **Factory giúp gì?** Nơi tạo/kiểm tra kiểu sản phẩm tập trung, caller không tự rẽ nhánh constructor.
+8. **Factory Method nào?** `ItemFactory` khai báo `create`; ba concrete factory ghi đè để tạo `Electronics`, `Art`, `Vehicle`. `ItemCategory.factory()` chọn creator.
+9. **Factory giúp gì?** `ProductService` dùng creator qua kiểu `ItemFactory`, không tự rẽ nhánh constructor; thêm loại mới không sửa creator gốc.
 10. **Observer hoạt động thế nào?** Service enqueue event sau commit; publisher chuyển cho broadcaster; subscriber socket nhận.
 11. **Tại sao không phát bid lỗi?** Transaction thất bại không đổi trạng thái, nên không có event để phát.
 12. **MVC phân chia ra sao?** FXML là view, controller xử lý thao tác, SocketClient/model DTO nối dữ liệu; nghiệp vụ ở server service.

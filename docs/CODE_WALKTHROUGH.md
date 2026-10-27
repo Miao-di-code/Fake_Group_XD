@@ -53,6 +53,6 @@ Trong `client/src/main/resources/view/detail.fxml`, nút **Đặt giá** gắn `
 
 ## 5. Những file khác nên đọc tiếp
 
-`AuthService`/`UserDao` quản lý đăng ký, đăng nhập, token và vai trò. `ProductService`/`ItemDao` quản lý sản phẩm và quyền sở hữu. `ItemFactory.create` chọn `Electronics`, `Art` hoặc `Vehicle`. `AuctionScheduler` kiểm tra phiên đến giờ bắt đầu/kết thúc; nó đọc end time hiện tại nên không đóng phiên theo giờ cũ sau gia hạn. `SnapshotService` export/import JSON phục vụ sao lưu; SQLite vẫn là nguồn dữ liệu chính. `DemoSeeder` tạo dữ liệu demo. Đọc [BACKEND_GUIDE.md](BACKEND_GUIDE.md) và [ADVANCED_FEATURES.md](ADVANCED_FEATURES.md) sau khi hiểu luồng cơ bản.
+`AuthService`/`UserDao` quản lý đăng ký, đăng nhập, token và vai trò. `ProductService`/`ItemDao` quản lý sản phẩm và quyền sở hữu. `ItemCategory.factory()` trả về concrete `ItemFactory` để tạo `Electronics`, `Art` hoặc `Vehicle`. `AuctionScheduler` kiểm tra phiên đến giờ bắt đầu/kết thúc; nó đọc end time hiện tại nên không đóng phiên theo giờ cũ sau gia hạn. `SnapshotService` export/import JSON phục vụ sao lưu; SQLite vẫn là nguồn dữ liệu chính. `DemoSeeder` tạo dữ liệu demo. Đọc [BACKEND_GUIDE.md](BACKEND_GUIDE.md) và [ADVANCED_FEATURES.md](ADVANCED_FEATURES.md) sau khi hiểu luồng cơ bản.
 
 **Ghi nhớ:** Bắt đầu từ một nút FXML, theo request đến service, DAO/database, rồi theo response/event quay lại giao diện. Không cần học hết mọi file trước khi chạy thử.

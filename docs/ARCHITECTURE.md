@@ -37,7 +37,11 @@ classDiagram
     class Electronics
     class Art
     class Vehicle
-    class ItemFactory { +create(category,...) Item }
+    class ItemFactory { <<abstract>> +create(...) Item }
+    class ElectronicsFactory
+    class ArtFactory
+    class VehicleFactory
+    class ItemCategory { +factory() ItemFactory }
     class Auction { +acceptsBidsAt(now) boolean +transitionTo(status) Auction }
     class BidTransaction
     Entity <|-- User
@@ -50,7 +54,13 @@ classDiagram
     Item <|-- Electronics
     Item <|-- Art
     Item <|-- Vehicle
-    ItemFactory ..> Item : tạo
+    ItemFactory <|-- ElectronicsFactory
+    ItemFactory <|-- ArtFactory
+    ItemFactory <|-- VehicleFactory
+    ItemCategory --> ItemFactory : chọn creator
+    ElectronicsFactory ..> Electronics : tạo
+    ArtFactory ..> Art : tạo
+    VehicleFactory ..> Vehicle : tạo
     Auction --> Item : itemId
     BidTransaction --> Auction : auctionId
     BidTransaction --> User : bidderUserId
@@ -58,13 +68,13 @@ classDiagram
 
 Các file trên ở `common/src/main/java/com/btl/auction/common/model`. `Entity` có ID dùng chung. `User` có vai trò, `Item` có danh mục và giá khởi điểm. `Auction` có giờ bắt đầu/kết thúc, giá hiện tại, người dẫn đầu và trạng thái; `BidTransaction` là một lần đặt giá. Mũi tên ID biểu diễn quan hệ dữ liệu, không có nghĩa object chứa cả object kia.
 
-**Đóng gói**: field trong model được giữ bên trong, constructor/method kiểm tra tính hợp lệ. **Kế thừa**: `Bidder`, `Seller`, `Admin` dùng phần chung của `User`; ba loại item dùng phần chung của `Item`. **Đa hình**: gọi `getRole()` hay `getCategory()` qua kiểu cha nhưng nhận kết quả của lớp con. **Trừu tượng**: `Entity`, `User`, `Item` giữ cấu trúc chung và không tạo trực tiếp. Ví dụ đơn giản: `ItemFactory.create(ELECTRONICS, ...)` trả về `Electronics`, nhưng nơi gọi vẫn có thể giữ biến kiểu `Item`.
+**Đóng gói**: field trong model được giữ bên trong, constructor/method kiểm tra tính hợp lệ. **Kế thừa**: `Bidder`, `Seller`, `Admin` dùng phần chung của `User`; ba loại item dùng phần chung của `Item`. **Đa hình**: gọi `getRole()` hay `getCategory()` qua kiểu cha nhưng nhận kết quả của lớp con. **Trừu tượng**: `Entity`, `User`, `Item` giữ cấu trúc chung và không tạo trực tiếp. Ví dụ đơn giản: `ItemCategory.ELECTRONICS.factory().create(...)` trả về `Electronics`, nhưng nơi gọi vẫn có thể giữ biến kiểu `ItemFactory` và `Item`.
 
 ## Những mẫu thiết kế trong code
 
 **Singleton** là một object dùng chung trong một tiến trình. `server/src/main/java/com/btl/auction/server/service/AuctionManager.java` có `getInstance()` và các `ReentrantLock` theo ID phiên. Một chỗ quản lý khóa giúp các bid cùng phiên vào lần lượt. Singleton không giữ giá chính thức; SQLite và `AuctionService` quyết định giá.
 
-**Factory** là nơi tập trung tạo object. `common/src/main/java/com/btl/auction/common/model/ItemFactory.java` có method tĩnh `create`, chọn `Electronics`, `Art`, `Vehicle` theo `ItemCategory`. Tài liệu đề bài gọi đây là Factory Method; trong code hiện tại đây là một factory tĩnh, không phải mô hình kế thừa factory phức tạp. Nhờ đó nơi tạo sản phẩm không lặp phần chọn class.
+**Factory Method**: `ItemFactory` là creator trừu tượng, khai báo method `create`. `ElectronicsFactory`, `ArtFactory`, `VehicleFactory` ghi đè method đó để tạo loại `Item` tương ứng. `ItemCategory.factory()` đưa caller đến creator phù hợp, nên `ProductService` không cần `switch` hay gọi constructor của từng loại. Khi thêm danh mục, cần thêm loại `Item`, creator mới và hằng enum tương ứng; không cần sửa `ItemFactory` hoặc `ProductService`.
 
 **Observer** là cách bên xử lý báo sự kiện cho bên quan tâm. `AuctionEventPublisher` nhận event sau khi transaction thành công; `AuctionEventBroadcaster` gửi đến các socket đã subscribe phiên. `SocketClient` gọi listener của màn chi tiết; JavaFX cập nhật UI qua `Platform.runLater`. Ví dụ bid hợp lệ phát `BID_UPDATED`; bid bị từ chối không có event.
 

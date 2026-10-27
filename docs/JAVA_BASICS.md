@@ -26,4 +26,4 @@
 
 **Exception** là tín hiệu báo một thao tác thất bại. Ví dụ `ServiceException` mang mã `BID_TOO_LOW`; `RequestDispatcher` đổi nó thành response lỗi cho client. `null` là “chưa có giá trị”: `leaderUserId` có thể `null` nếu chưa ai đặt giá. Luôn xem code kiểm tra `null` trước khi dùng giá trị đó.
 
-**Tự kiểm tra:** Mở `Auction.java` và chỉ ra class, field, method. Mở `ItemFactory.java` và tìm nơi tạo `Electronics`, `Art`, `Vehicle`. Sau đó đọc [tổng quan kiến trúc](ARCHITECTURE.md).
+**Tự kiểm tra:** Mở `Auction.java` và chỉ ra class, field, method. Mở `ItemFactory.java` và ba concrete factory để tìm nơi tạo `Electronics`, `Art`, `Vehicle`. Sau đó đọc [tổng quan kiến trúc](ARCHITECTURE.md).

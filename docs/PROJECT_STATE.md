@@ -20,7 +20,7 @@ Chức năng bắt buộc về OOP/pattern, auth/role, CRUD, auction lifecycle, 
 
 - Tài liệu cũ nêu `AutoBidService` như thành phần dự kiến; code thực tế dùng `AuctionService`, `AutoBidCalculator` và `AutoBidDao`. [REQUIREMENTS.md](REQUIREMENTS.md) đã ghi đúng tên.
 - Tài liệu backend cũ nói snapshot có bốn bảng; `SnapshotService` hiện dùng năm bảng ở v2, gồm `auto_bids`, và vẫn đọc v1. [BACKEND_GUIDE.md](BACKEND_GUIDE.md) đã làm rõ.
-- `ItemFactory.create` trong code là factory tĩnh. [ARCHITECTURE.md](ARCHITECTURE.md) giải thích cách dùng và phân biệt với Factory Method theo nghĩa mẫu thiết kế đầy đủ.
+- Ngày 27/10/2026, factory tĩnh cũ được thay bằng `ItemFactory` trừu tượng và ba concrete factory ghi đè `create`. [ARCHITECTURE.md](ARCHITECTURE.md) mô tả thiết kế hiện tại. Sau thay đổi, `mvn -B -o clean verify` **BUILD SUCCESS**: 42/42 JUnit pass, Checkstyle 0 violation, ngưỡng JaCoCo server đạt. Kết quả kiểm thử cũ ở đầu tài liệu là mốc lịch sử trước thay đổi này.
 - Các mục trên là sửa mô tả cho khớp code, không thay đổi kết quả nghiệm thu lịch sử ở trên. Tài liệu bắt đầu ở [guide.md](guide.md).
 
 ## Chạy và tài liệu

@@ -2,7 +2,6 @@ package com.btl.auction.server.service;
 
 import com.btl.auction.common.dto.ItemDto;
 import com.btl.auction.common.model.ItemCategory;
-import com.btl.auction.common.model.ItemFactory;
 import com.btl.auction.common.model.UserRole;
 import com.btl.auction.common.protocol.ErrorCode;
 import com.btl.auction.server.dao.AuctionDao;
@@ -108,6 +107,6 @@ public final class ProductService {
         AuthService.validText(name, "item name", 1, 150);
         AuthService.validText(description, "description", 1, 2000);
         AuthService.validText(detail, "detail", 1, 200);
-        ItemFactory.create(category, 1, 1, name, description, price, detail);
+        category.factory().create(1, 1, name, description, price, detail);
     }
 }

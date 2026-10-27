@@ -16,7 +16,7 @@ Tài liệu này khóa tên và giao thức giữa các module. Chỉ đổi khi
 
 - ID trong model là long dương. Tiền là long số nguyên VND không âm, không dùng double/float. Bid mới phải lớn hơn giá hiện tại. Giá hiện tại ban đầu là giá khởi điểm.
 - User có id, username, displayName, role; mật khẩu và password hash chỉ ở server/DAO. Không gửi hash cho client.
-- Item có id, sellerId, name, description, startingPriceVnd và category. Loại cụ thể thêm manufacturer (Electronics), artist (Art), make (Vehicle). ItemFactory tạo đúng lớp con theo ItemCategory.
+- Item có id, sellerId, name, description, startingPriceVnd và category. Loại cụ thể thêm manufacturer (Electronics), artist (Art), make (Vehicle). `ItemFactory` là creator trừu tượng; `ElectronicsFactory`, `ArtFactory`, `VehicleFactory` ghi đè `create`. `ItemCategory.factory()` trả về creator tương ứng.
 - Auction có id, itemId, startAtEpochMs, endAtEpochMs, currentPriceVnd, leaderUserId nullable, status. start < end. Mỗi Item có tối đa một Auction ở schema nền tảng.
 - BidTransaction có id, auctionId, bidderUserId, amountVnd, createdAtEpochMs. Cần sắp xếp theo createdAtEpochMs rồi id khi hiển thị.
 - Enum: UserRole {BIDDER, SELLER, ADMIN}; ItemCategory {ELECTRONICS, ART, VEHICLE}; AuctionStatus {OPEN, RUNNING, FINISHED, PAID, CANCELED}.
